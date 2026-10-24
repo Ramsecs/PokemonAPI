@@ -1,0 +1,49 @@
+package com.example.PokemonAPI.service;
+
+import com.example.PokemonAPI.model.Pokemon;
+import com.example.PokemonAPI.repository.PokemonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
+@Service
+public class PokemonService {
+
+    @Autowired
+    private PokemonRepository pokemonRepository;
+
+    public List<Pokemon> obtenerTodos(){
+        return pokemonRepository.findAll();
+    }
+
+    public Pokemon obtenerPorId(Long id){
+        return pokemonRepository.findById(id).orElse(null);
+    }
+
+    public Pokemon crear(Pokemon pokemon){
+        return pokemonRepository.save(pokemon);
+    }
+
+    public void eliminar(Long id){
+        pokemonRepository.deleteById(id);
+    }
+
+    public Pokemon editarParcial(Long id, Pokemon pokemon){
+        return pokemonRepository.findById(id).map(pokemonExist -> {
+            pokemonExist.setNombre(pokemon.getNombre());
+            pokemonExist.setNivel(pokemon.getNivel());
+            pokemonExist.setDefensa(pokemon.getDefensa());
+            pokemonExist.setDescripcion(pokemon.getDescripcion());
+            pokemonExist.setImagenURL(pokemon.getImagenURL());
+            pokemonExist.setTipo(pokemon.getTipo());
+            return pokemonRepository.save(pokemonExist);
+        });
+    }
+
+    public Pokemon editar(Long id, Pokemon pokemon){
+
+    }
+
+}
