@@ -43,7 +43,15 @@ public class PokemonService {
     }
 
     public Pokemon editar(Long id, Pokemon pokemon){
-
+        return pokemonRepository.findById(id).map(pokemonExist -> {
+            if (pokemon.getNombre() != null) pokemonExist.setNombre(pokemon.getNombre());
+            if (pokemon.getNivel() != null) pokemonExist.setNivel(pokemon.getNivel());
+            if (pokemon.getDefensa() != null) pokemonExist.setDefensa(pokemon.getDefensa());
+            if (pokemon.getDescripcion() != null) pokemonExist.setDescripcion(pokemon.getDescripcion());
+            if (pokemon.getImagenURL() != null) pokemonExist.setImagenURL(pokemon.getImagenURL());
+            if (pokemon.getTipo() != null) pokemonExist.setTipo(pokemon.getTipo());
+            return pokemonRepository.save(pokemonExist);
+        });
     }
 
 }
