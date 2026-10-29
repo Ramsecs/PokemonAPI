@@ -1,5 +1,6 @@
 package com.example.PokemonAPI.service;
 
+import com.example.PokemonAPI.exception.ResourceNotTimeException;
 import com.example.PokemonAPI.model.Pokemon;
 import com.example.PokemonAPI.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PokemonService {
@@ -19,7 +21,7 @@ public class PokemonService {
     }
 
     public Pokemon obtenerPorId(Long id){
-        return pokemonRepository.findById(id).orElse(null);
+        return pokemonRepository.findById(id).orElseThrow(() -> new ResourceNotTimeException("El pokemon no existe"));
     }
 
     public Pokemon crear(Pokemon pokemon){
@@ -30,7 +32,7 @@ public class PokemonService {
         pokemonRepository.deleteById(id);
     }
 
-    public Pokemon editarParcial(Long id, Pokemon pokemon){
+    public Optional<Pokemon> editar(Long id, Pokemon pokemon){
         return pokemonRepository.findById(id).map(pokemonExist -> {
             pokemonExist.setNombre(pokemon.getNombre());
             pokemonExist.setNivel(pokemon.getNivel());
@@ -42,7 +44,7 @@ public class PokemonService {
         });
     }
 
-    public Pokemon editar(Long id, Pokemon pokemon){
+    public Optional<Pokemon> editarParcial(Long id, Pokemon pokemon){
         return pokemonRepository.findById(id).map(pokemonExist -> {
             if (pokemon.getNombre() != null) pokemonExist.setNombre(pokemon.getNombre());
             if (pokemon.getNivel() != null) pokemonExist.setNivel(pokemon.getNivel());
